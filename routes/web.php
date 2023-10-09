@@ -18,6 +18,7 @@ Route::get('/home', [UserControllers::class, 'dataTabel'])->name('home.dataTabel
 Route::get('/register', [UserControllers::class, 'index'])->name('users.index');
 
 Route::delete('/users/{id}', [UserControllers::class, 'delete'])->name('users.delete');
-Route::get('/update/{id}/{full_name}/{email}/{phone}/{address}/{password}', [UserControllers::class, 'showUpdateForm'])->name('update');
+Route::get('/update/{id}/{full_name}/{email}/{phone}/{address}', [UserControllers::class, 'showUpdateForm'])->name('update');
+Route::put('/users/{id}', [UserControllers::class, 'update'])->name('users.update');
 
 Route::get('/logout', [UserControllers::class, 'logout'])->name('logout');
