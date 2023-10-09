@@ -5,6 +5,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+
 class UserControllers extends Controller
 {
     
@@ -27,6 +28,8 @@ class UserControllers extends Controller
     
         return view('home', compact('users'));
     }
+
+    
     public function store(Request $request)
     {
         // Validate the incoming request data
@@ -85,25 +88,51 @@ class UserControllers extends Controller
 
 
 
-    // Delete the row with id     // Remove the specified user from the database.
-    public function delete(Request $request, $id)
-    {
-        $user = User::find($id);
-
-        if (!$user) {
-            return response()->json(['success' => false, 'message' => 'User not found.'], 404);
-        }
-
-        $user->delete();
-
-        return response()->json(['success' => true, 'message' => 'User deleted successfully.']);
-    }
+     // Delete the row with id //Remove the specified user from the database.
+     public function delete(Request $request, $id)
+     {
+         $user = User::find($id);
+ 
+         if (!$user) {
+             return response()->json(['success' => false, 'message' => 'User not found.'], 404);
+         }
+ 
+         $user->delete();
+ 
+         return response()->json(['success' => true, 'message' => 'User deleted successfully.']);
+     }
 
     //Update data
     public function showUpdateForm($id, $full_name, $email, $phone, $address) {
         return view('update', compact('id', 'full_name', 'email', 'phone', 'address'));
     }
     
+    // add modal
+    public function add(Request $request){
+        // Validate the incoming request data
+        $validatedData = Validator::make($request->all(),[
+            'full_name' => 'required|string',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required|nullable|string',
+            'address' => 'required|nullable|string',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+        if($validatedData->fails()){
+            return redirect('/')->withErrors($validatedData)->withInput();
+
+        }
+        $user = new User();
+        $user->full_name = $request->input('full_name');
+        $user->email = $request->input('email');
+        $user->phone = $request->input('phone');
+        $user->address = $request->input('address');
+        $user->password = bcrypt($request->input('password'));
+        $user->save();
+
+        // Redirect with a success message
+        return redirect()->route('home.dataTabel');
+  
+    }
 
     // Update quaery
     public function update(Request $request, $id) {
@@ -134,8 +163,8 @@ class UserControllers extends Controller
     // Logout 
 
     public function logout() {
-        Auth::logout(); // Logout the user
-        Session::forget('userId'); // Remove the user ID from the session
-        return redirect('/login'); // Redirect to the login page
+        Auth::logout(); // Clear authentication state
+        Session::flush(); // Clear all session data
+        return redirect()->route('users.loginForm');
 }
 }
