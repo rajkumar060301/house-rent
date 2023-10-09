@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update</title>
-    <link rel="stylesheet" href="{{ asset('styles.css') }}"> <!-- External CSS file -->
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}"> <!-- External CSS file -->
 </head>
 <body>
     <div class="registration-form">
