@@ -62,9 +62,11 @@ class UserControllers extends Controller
         if (Auth::attempt($credentials)) {
             // Get the authenticated user's ID
             $userId = Auth::user()->id;
+            $full_name = Auth::user()->full_name;
 
             // Store the user ID in the session
             session(['userId' => $userId]);
+            session(['fullName' => $full_name]);
             return redirect()->route('home.dataTabel');
         }
 
@@ -98,10 +100,36 @@ class UserControllers extends Controller
     }
 
     //Update data
-    public function showUpdateForm($id, $full_name, $email, $phone, $address,$password) {
-        return view('update', compact('id', 'full_name', 'email', 'phone', 'address','password'));
+    public function showUpdateForm($id, $full_name, $email, $phone, $address) {
+        return view('update', compact('id', 'full_name', 'email', 'phone', 'address'));
     }
     
+
+    // Update quaery
+    public function update(Request $request, $id) {
+        // Validate the form data
+        $request->validate([
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+            'address' => 'required|string|max:255',
+        ]);
+    
+        // Find the user by ID
+        $user = User::find($id);
+    
+        // Update user data
+        $user->update([
+            'full_name' => $request->input('full_name'),
+            'email' => $request->input('email'),
+            'phone' => $request->input('phone'),
+            'address' => $request->input('address'),
+        ]);
+    
+        // Redirect the user to a success page or any other appropriate page
+        return redirect('/home');
+    }
+
 
     // Logout 
 
