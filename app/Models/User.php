@@ -14,3 +14,5 @@ class User extends Model
         'password',
     ];
 }
+
+// User.php (or whatever your User model is named)
