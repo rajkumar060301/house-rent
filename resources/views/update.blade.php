@@ -9,8 +9,9 @@
 <body>
     <div class="registration-form">
         <h1>House Owner Updations</h1>
-        <form action="/update/{{ $id }}" method="post">                           
+        <form action="{{ route('users.update', $id) }}" method="post">                           
         @csrf
+        @method('PUT')
             <!-- Full Name (required) -->
             <label for="full_name">Full Name:</label>
             <input type="text" id="full_name" name="full_name" value="{{$full_name}}">
@@ -29,11 +30,6 @@
             <!-- House Address -->
             <label for="address">House Address:</label>
             <input type="text" id="address" name="address" value="{{ $address}}">
-            <span style="color:red"></span>
-            
-            <!-- Password (required) -->
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" value="{{$password}}">
             <span style="color:red"></span>
 
             <!-- Submit Button -->
